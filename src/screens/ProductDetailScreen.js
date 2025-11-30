@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,22 +8,24 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import { colors } from '../styles/colors';
-import { typography } from '../styles/typography';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
+import {colors} from '../styles/colors';
+import {typography} from '../styles/typography';
+import {useCart} from '../context/CartContext';
+import {useFavorites} from '../context/FavoritesContext';
 import FurnitureAPI from '../services/api';
-import { transformApiProduct, formatPrice } from '../utils/helpers';
+import {transformApiProduct, formatPrice} from '../utils/helpers';
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
-const ProductDetailScreen = ({ route, navigation }) => {
-  const { product: initialProduct } = route.params || {};
+const ProductDetailScreen = ({route, navigation}) => {
+  const {product: initialProduct} = route.params || {};
   const [product, setProduct] = useState(initialProduct);
   const [loading, setLoading] = useState(!initialProduct);
   const [error, setError] = useState(null);
-  const [isFavorite, setIsFavorite] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
       setLoading(true);
       setError(null);
       const response = await FurnitureAPI.getProductBySku(sku);
-      
+
       if (response.success && response.data) {
         setProduct(transformApiProduct(response.data));
       }
@@ -49,9 +51,14 @@ const ProductDetailScreen = ({ route, navigation }) => {
     }
   };
 
+  const {addToCart} = useCart();
+
   const handleAddToCart = () => {
-    // TODO: Implement cart functionality
-    console.log('Added to cart:', product.id, 'Quantity:', quantity);
+    addToCart(product, quantity);
+    Alert.alert('Success', 'Added to cart successfully', [
+      {text: 'Continue Shopping', style: 'cancel'},
+      {text: 'Go to Cart', onPress: () => navigation.navigate('Cart')},
+    ]);
   };
 
   const handleBuyNow = () => {
@@ -76,7 +83,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
         <View style={styles.errorContainer}>
           <Icon name="alert-circle" size={64} color={colors.error} />
           <Text style={styles.errorText}>{error || 'Product not found'}</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.retryButton}
             onPress={() => navigation.goBack()}
           >
@@ -91,37 +98,40 @@ const ProductDetailScreen = ({ route, navigation }) => {
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
+  const {isFavorite: isFavoriteFunc, toggleFavorite} = useFavorites();
+  const favorite = isFavoriteFunc(product.id);
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.headerButton}
         >
           <Icon name="arrow-left" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Product Details</Text>
-        <TouchableOpacity 
-          onPress={() => setIsFavorite(!isFavorite)}
+        <TouchableOpacity
+          onPress={() => toggleFavorite(product)}
           style={styles.headerButton}
         >
-          <Icon 
-            name={isFavorite ? 'heart' : 'heart-outline'} 
-            size={24} 
-            color={isFavorite ? colors.error : colors.textPrimary} 
+          <Icon
+            name={favorite ? 'heart' : 'heart-outline'}
+            size={24}
+            color={favorite ? colors.error : colors.textPrimary}
           />
         </TouchableOpacity>
       </View>
 
-      <ScrollView 
-        contentContainerStyle={styles.content} 
+      <ScrollView
+        contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
         {/* Product Image */}
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: product.image }}
+            source={{uri: product.image}}
             style={styles.image}
             resizeMode="cover"
           />
@@ -156,14 +166,14 @@ const ProductDetailScreen = ({ route, navigation }) => {
               </View>
             )}
             <View style={styles.stockContainer}>
-              <Icon 
-                name="package-variant" 
-                size={16} 
-                color={product.stock > 0 ? colors.success : colors.error} 
+              <Icon
+                name="package-variant"
+                size={16}
+                color={product.stock > 0 ? colors.success : colors.error}
               />
               <Text style={[
                 styles.stockText,
-                { color: product.stock > 0 ? colors.success : colors.error }
+                {color: product.stock > 0 ? colors.success : colors.error}
               ]}>
                 {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
               </Text>
@@ -241,10 +251,10 @@ const ProductDetailScreen = ({ route, navigation }) => {
                 onPress={() => setQuantity(Math.min(product.stock, quantity + 1))}
                 disabled={quantity >= product.stock}
               >
-                <Icon 
-                  name="plus" 
-                  size={20} 
-                  color={quantity >= product.stock ? colors.textLight : colors.textPrimary} 
+                <Icon
+                  name="plus"
+                  size={20}
+                  color={quantity >= product.stock ? colors.textLight : colors.textPrimary}
                 />
               </TouchableOpacity>
             </View>
@@ -254,15 +264,15 @@ const ProductDetailScreen = ({ route, navigation }) => {
 
       {/* Sticky Bottom Bar */}
       <View style={styles.stickyBar}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.cartBtn}
           onPress={handleAddToCart}
           disabled={product.stock === 0}
         >
-          <Icon name="cart-outline" size={20} color={colors.white} />
+          <Icon name="cart-outline" size={20} color={colors.textPrimary} />
           <Text style={styles.btnText}>Add to Cart</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.buyBtn, product.stock === 0 && styles.disabledBtn]}
           onPress={handleBuyNow}
           disabled={product.stock === 0}
@@ -277,7 +287,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.white },
+  container: {flex: 1, backgroundColor: colors.white},
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -296,7 +306,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     ...typography.h4,
   },
-  content: { paddingBottom: 100 },
+  content: {paddingBottom: 100},
   imageContainer: {
     width: '100%',
     height: width * 1.2,
@@ -347,8 +357,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textTransform: 'capitalize',
   },
-  title: { 
-    ...typography.h2, 
+  title: {
+    ...typography.h2,
     marginBottom: 12,
   },
   metaRow: {
@@ -379,25 +389,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
   },
-  price: { 
-    ...typography.h2, 
+  price: {
+    ...typography.h2,
     color: colors.primary,
   },
-  originalPrice: { 
-    ...typography.h4, 
-    color: colors.textLight, 
+  originalPrice: {
+    ...typography.h4,
+    color: colors.textLight,
     textDecorationLine: 'line-through',
     marginLeft: 12,
   },
   section: {
     marginBottom: 24,
   },
-  sectionTitle: { 
-    ...typography.h4, 
+  sectionTitle: {
+    ...typography.h4,
     marginBottom: 12,
   },
-  description: { 
-    ...typography.bodyMedium, 
+  description: {
+    ...typography.bodyMedium,
     color: colors.textSecondary,
     lineHeight: 24,
   },
@@ -449,35 +459,35 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
   },
-  cartBtn: { 
-    flex: 1, 
-    padding: 16, 
-    borderRadius: 12, 
-    backgroundColor: colors.textPrimary, 
+  cartBtn: {
+    flex: 1,
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: colors.primaryLight,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     gap: 8,
   },
-  buyBtn: { 
-    flex: 1, 
-    padding: 16, 
-    borderRadius: 12, 
-    backgroundColor: colors.primary, 
+  buyBtn: {
+    flex: 1,
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   disabledBtn: {
     backgroundColor: colors.border,
   },
-  btnText: { 
-    ...typography.bodyMedium, 
-    color: colors.white, 
+  btnText: {
+    ...typography.bodyMedium,
+    color: colors.textPrimary,
     fontWeight: '600',
   },
-  btnTextPrimary: { 
-    ...typography.bodyMedium, 
-    color: colors.white, 
+  btnTextPrimary: {
+    ...typography.bodyMedium,
+    color: colors.white,
     fontWeight: '600',
   },
   loadingContainer: {
