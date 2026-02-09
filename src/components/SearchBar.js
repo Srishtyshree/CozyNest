@@ -5,14 +5,14 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import { colors } from '../styles/colors';
-import { typography } from '../styles/typography';
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
+import {colors} from '../styles/colors';
+import {typography} from '../styles/typography';
 
-const SearchBar = ({ 
-  value, 
-  onChangeText, 
-  onClear, 
+const SearchBar = ({
+  value,
+  onChangeText,
+  onClear,
   placeholder = 'Search products...',
   onFocus,
 }) => {
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 48,
     shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,

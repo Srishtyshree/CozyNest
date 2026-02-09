@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -11,14 +11,14 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import { useAuth } from '../context/AuthContext';
-import { colors } from '../styles/colors';
-import { typography } from '../styles/typography';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
+import {useAuth} from '../context/AuthContext';
+import {colors} from '../styles/colors';
+import {typography} from '../styles/typography';
 
-const SignupScreen = ({ navigation }) => {
-  const { signup } = useAuth();
+const SignupScreen = ({navigation}) => {
+  const {signup} = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -91,6 +91,7 @@ const SignupScreen = ({ navigation }) => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          style={{flex: 1}}
         >
           {/* Header */}
           <View style={styles.header}>
@@ -127,7 +128,7 @@ const SignupScreen = ({ navigation }) => {
                   value={name}
                   onChangeText={(text) => {
                     setName(text);
-                    setErrors(prev => ({ ...prev, name: '' }));
+                    setErrors(prev => ({...prev, name: ''}));
                   }}
                   autoCapitalize="words"
                 />
@@ -152,7 +153,7 @@ const SignupScreen = ({ navigation }) => {
                   value={email}
                   onChangeText={(text) => {
                     setEmail(text);
-                    setErrors(prev => ({ ...prev, email: '' }));
+                    setErrors(prev => ({...prev, email: ''}));
                   }}
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -179,7 +180,7 @@ const SignupScreen = ({ navigation }) => {
                   value={password}
                   onChangeText={(text) => {
                     setPassword(text);
-                    setErrors(prev => ({ ...prev, password: '' }));
+                    setErrors(prev => ({...prev, password: ''}));
                   }}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
@@ -215,7 +216,7 @@ const SignupScreen = ({ navigation }) => {
                   value={confirmPassword}
                   onChangeText={(text) => {
                     setConfirmPassword(text);
-                    setErrors(prev => ({ ...prev, confirmPassword: '' }));
+                    setErrors(prev => ({...prev, confirmPassword: ''}));
                   }}
                   secureTextEntry={!showConfirmPassword}
                   autoCapitalize="none"
@@ -416,7 +417,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
     shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,

@@ -1,7 +1,7 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import { colors } from '../styles/colors';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
+import {colors} from '../styles/colors';
 
 import HomeScreen from '../screens/HomeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
@@ -29,7 +29,7 @@ const BottomTabNavigator = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({color, size}) => (
             <Icon name="home-outline" size={size} color={color} />
           ),
         }}
@@ -38,7 +38,7 @@ const BottomTabNavigator = () => {
         name="Explore"
         component={ExploreScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({color, size}) => (
             <Icon name="compass-outline" size={size} color={color} />
           ),
         }}
@@ -47,7 +47,7 @@ const BottomTabNavigator = () => {
         name="Cart"
         component={CartScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({color, size}) => (
             <Icon name="cart-outline" size={size} color={color} />
           ),
         }}
@@ -56,7 +56,7 @@ const BottomTabNavigator = () => {
         name="Favorites"
         component={FavoritesScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({color, size}) => (
             <Icon name="heart-outline" size={size} color={color} />
           ),
         }}
@@ -65,7 +65,7 @@ const BottomTabNavigator = () => {
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({color, size}) => (
             <Icon name="account-outline" size={size} color={color} />
           ),
         }}

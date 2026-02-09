@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -11,14 +11,14 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import { useAuth } from '../context/AuthContext';
-import { colors } from '../styles/colors';
-import { typography } from '../styles/typography';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
+import {useAuth} from '../context/AuthContext';
+import {colors} from '../styles/colors';
+import {typography} from '../styles/typography';
 
-const LoginScreen = ({ navigation }) => {
-  const { login } = useAuth();
+const LoginScreen = ({navigation}) => {
+  const {login} = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -44,15 +44,26 @@ const LoginScreen = ({ navigation }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const [showAuthOptions, setShowAuthOptions] = useState(false);
+
   const handleLogin = async () => {
     if (!validateForm()) return;
 
     setLoading(true);
+    setShowAuthOptions(false);
     const result = await login(email, password);
     setLoading(false);
 
     if (!result.success) {
-      Alert.alert('Login Failed', result.error || 'Please try again');
+      if (result.error === 'INCORRECT_PASSWORD') {
+        setShowAuthOptions(true);
+        Alert.alert(
+          'Incorrect Password',
+          'The password you entered is incorrect. Would you like to reset or change it?'
+        );
+      } else {
+        Alert.alert('Login Failed', result.error || 'Please try again');
+      }
     }
   };
 
@@ -66,6 +77,7 @@ const LoginScreen = ({ navigation }) => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          style={{flex: 1}}
         >
           {/* Header */}
           <View style={styles.header}>
@@ -102,7 +114,7 @@ const LoginScreen = ({ navigation }) => {
                   value={email}
                   onChangeText={(text) => {
                     setEmail(text);
-                    setErrors(prev => ({ ...prev, email: '' }));
+                    setErrors(prev => ({...prev, email: ''}));
                   }}
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -129,7 +141,7 @@ const LoginScreen = ({ navigation }) => {
                   value={password}
                   onChangeText={(text) => {
                     setPassword(text);
-                    setErrors(prev => ({ ...prev, password: '' }));
+                    setErrors(prev => ({...prev, password: ''}));
                   }}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
@@ -170,6 +182,26 @@ const LoginScreen = ({ navigation }) => {
                 <Text style={styles.loginButtonText}>Sign In</Text>
               )}
             </TouchableOpacity>
+
+            {showAuthOptions && (
+              <View style={styles.authOptionsContainer}>
+                <TouchableOpacity
+                  style={styles.optionButton}
+                  onPress={() => Alert.alert('Forgot Password', 'Password reset link sent to your email!')}
+                >
+                  <Icon name="key-variant" size={20} color={colors.primary} />
+                  <Text style={styles.optionButtonText}>Forgot Password?</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.optionButton}
+                  onPress={() => Alert.alert('Change Password', 'Redirecting to password change screen...')}
+                >
+                  <Icon name="lock-reset" size={20} color={colors.primary} />
+                  <Text style={styles.optionButtonText}>Change Password</Text>
+                </TouchableOpacity>
+              </View>
+            )}
 
             {/* Divider */}
             <View style={styles.divider}>
@@ -295,7 +327,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
     shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
@@ -352,6 +384,26 @@ const styles = StyleSheet.create({
     ...typography.bodyMedium,
     color: colors.primary,
     fontWeight: '600',
+  },
+  authOptionsContainer: {
+    marginTop: -8,
+    marginBottom: 24,
+    gap: 12,
+  },
+  optionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F0F7FF',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E1E9F5',
+  },
+  optionButtonText: {
+    ...typography.bodyMedium,
+    color: colors.primary,
+    fontWeight: '600',
+    marginLeft: 10,
   },
 });
 

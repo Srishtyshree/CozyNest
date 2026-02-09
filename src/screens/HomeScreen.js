@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,20 +9,20 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import ProductCard from '../components/ProductCard';
 import CategoryCard from '../components/CategoryCard';
 import SearchBar from '../components/SearchBar';
-import { colors } from '../styles/colors';
-import { typography } from '../styles/typography';
-import { globalStyles } from '../styles/globalStyles';
+import {colors} from '../styles/colors';
+import {typography} from '../styles/typography';
+import {globalStyles} from '../styles/globalStyles';
 import FurnitureAPI from '../services/api';
-import { transformApiProduct } from '../utils/helpers';
+import {transformApiProduct} from '../utils/helpers';
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,33 +30,33 @@ const HomeScreen = ({ navigation }) => {
 
   // Static categories (you can customize these)
   const categories = [
-    { 
-      id: '1', 
-      name: 'Living Room', 
+    {
+      id: '1',
+      name: 'Living Room',
       apiCategory: 'sofa',
-      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400', 
-      subtitle: 'Modern' 
+      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400',
+      subtitle: 'Modern'
     },
-    { 
-      id: '2', 
-      name: 'Bedroom', 
+    {
+      id: '2',
+      name: 'Bedroom',
       apiCategory: 'matress',
-      image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400', 
-      subtitle: 'Cozy' 
+      image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400',
+      subtitle: 'Cozy'
     },
-    { 
-      id: '3', 
-      name: 'Kitchen', 
+    {
+      id: '3',
+      name: 'Kitchen',
       apiCategory: 'kitchen',
-      image: 'https://images.unsplash.com/photo-1556912167-f556f1f39faa?w=400', 
-      subtitle: 'Modern' 
+      image: 'https://images.unsplash.com/photo-1556912167-f556f1f39faa?w=400',
+      subtitle: 'Modern'
     },
-    { 
-      id: '4', 
-      name: 'Dining', 
+    {
+      id: '4',
+      name: 'Dining',
       apiCategory: 'table',
-      image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=400', 
-      subtitle: 'Elegant' 
+      image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=400',
+      subtitle: 'Elegant'
     },
   ];
 
@@ -70,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
       setLoading(true);
       setError(null);
       const response = await FurnitureAPI.getFeaturedProducts(8);
-      
+
       if (response.success && response.data) {
         const transformedProducts = response.data.map(transformApiProduct);
         setFeaturedProducts(transformedProducts);
@@ -84,7 +84,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleCategoryPress = (category) => {
-    navigation.navigate('ProductList', { 
+    navigation.navigate('ProductList', {
       category: category,
       apiCategory: category.apiCategory,
     });
@@ -92,9 +92,9 @@ const HomeScreen = ({ navigation }) => {
 
   const handleFilterPress = async (filterType) => {
     try {
-      let params = { limit: 20 };
-      
-      switch(filterType) {
+      let params = {limit: 20};
+
+      switch (filterType) {
         case 'New Arrivals':
           params.sort = 'newest';
           break;
@@ -108,15 +108,15 @@ const HomeScreen = ({ navigation }) => {
           // We'll fetch and filter on client side
           const response = await FurnitureAPI.getDiscountedProducts(20);
           if (response.success) {
-            navigation.navigate('ProductList', { 
+            navigation.navigate('ProductList', {
               title: filterType,
               preloadedProducts: response.data.map(transformApiProduct),
             });
           }
           return;
       }
-      
-      navigation.navigate('ProductList', { 
+
+      navigation.navigate('ProductList', {
         title: filterType,
         filterParams: params,
       });
@@ -125,11 +125,11 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  const renderCategoryItem = ({ item }) => (
+  const renderCategoryItem = ({item}) => (
     <CategoryCard
       category={item}
       onPress={() => handleCategoryPress(item)}
-      style={{ width: width * 0.7 }}
+      style={{width: width * 0.7}}
     />
   );
 
@@ -147,9 +147,10 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView 
+      <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        style={{flex: 1}}
       >
         {/* Search Bar */}
         <View style={styles.searchContainer}>
@@ -180,14 +181,14 @@ const HomeScreen = ({ navigation }) => {
         </View>
 
         {/* Quick Filters */}
-        <ScrollView 
-          horizontal 
+        <ScrollView
+          horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.filterChips}
           contentContainerStyle={styles.filterChipsContent}
         >
           {['New Arrivals', 'Best Sellers', 'Under $100', 'On Sale'].map((filter, index) => (
-            <TouchableOpacity 
+            <TouchableOpacity
               key={index}
               style={styles.filterChip}
               activeOpacity={0.7}
@@ -202,10 +203,10 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.section}>
           <View style={[globalStyles.spaceBetween, styles.sectionHeader]}>
             <Text style={styles.sectionTitle}>Featured Products</Text>
-            <TouchableOpacity 
-              onPress={() => navigation.navigate('ProductList', { 
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ProductList', {
                 title: 'All Products',
-                filterParams: { featured: true }
+                filterParams: {featured: true}
               })}
             >
               <Text style={styles.seeAll}>See All</Text>
@@ -220,7 +221,7 @@ const HomeScreen = ({ navigation }) => {
           ) : error ? (
             <View style={styles.errorContainer}>
               <Text style={styles.errorText}>{error}</Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.retryButton}
                 onPress={fetchFeaturedProducts}
               >
@@ -233,7 +234,7 @@ const HomeScreen = ({ navigation }) => {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  onPress={(product) => navigation.navigate('ProductDetail', { product })}
+                  onPress={(product) => navigation.navigate('ProductDetail', {product})}
                   onFavoritePress={(id) => console.log('Favorite:', id)}
                 />
               ))}

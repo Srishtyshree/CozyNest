@@ -10,7 +10,7 @@ const CartScreen = ({navigation}) => {
     const {cartItems, removeFromCart, updateQuantity, cartTotal} = useCart();
 
     const handleCheckout = () => {
-        Alert.alert('Checkout', 'Proceeding to checkout...');
+        navigation.navigate('Checkout');
     };
 
     const renderItem = ({item}) => (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,23 +7,23 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import { colors } from '../styles/colors';
-import { typography } from '../styles/typography';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
+import {colors} from '../styles/colors';
+import {typography} from '../styles/typography';
 import ProductCard from '../components/ProductCard';
 import FurnitureAPI from '../services/api';
-import { transformApiProduct } from '../utils/helpers';
+import {transformApiProduct} from '../utils/helpers';
 
-const ProductListScreen = ({ route, navigation }) => {
-  const { 
-    category, 
-    apiCategory, 
-    title, 
+const ProductListScreen = ({route, navigation}) => {
+  const {
+    category,
+    apiCategory,
+    title,
     filterParams,
-    preloadedProducts 
+    preloadedProducts
   } = route.params || {};
-  
+
   const [products, setProducts] = useState(preloadedProducts || []);
   const [loading, setLoading] = useState(!preloadedProducts);
   const [error, setError] = useState(null);
@@ -46,13 +46,13 @@ const ProductListScreen = ({ route, navigation }) => {
       } else {
         setLoading(true);
       }
-      
+
       setError(null);
 
       const params = {
         limit: LIMIT,
         offset: isRefresh ? 0 : offset,
-        ...(apiCategory && { category: apiCategory }),
+        ...(apiCategory && {category: apiCategory}),
         ...filterParams,
       };
 
@@ -60,7 +60,7 @@ const ProductListScreen = ({ route, navigation }) => {
 
       if (response.success && response.data) {
         const transformedProducts = response.data.map(transformApiProduct);
-        
+
         if (isRefresh) {
           setProducts(transformedProducts);
           setOffset(LIMIT);
@@ -68,7 +68,7 @@ const ProductListScreen = ({ route, navigation }) => {
           setProducts(prev => offset === 0 ? transformedProducts : [...prev, ...transformedProducts]);
           setOffset(prev => prev + LIMIT);
         }
-        
+
         setHasMore(transformedProducts.length === LIMIT);
       }
     } catch (err) {
@@ -92,7 +92,7 @@ const ProductListScreen = ({ route, navigation }) => {
 
   const renderFooter = () => {
     if (!loading) return null;
-    
+
     return (
       <View style={styles.footer}>
         <ActivityIndicator size="small" color={colors.primary} />
@@ -110,7 +110,7 @@ const ProductListScreen = ({ route, navigation }) => {
         <Text style={styles.emptySubtitle}>
           Try adjusting your filters or browse other categories
         </Text>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.browseButton}
           onPress={() => navigation.goBack()}
         >
@@ -126,7 +126,7 @@ const ProductListScreen = ({ route, navigation }) => {
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
@@ -147,7 +147,7 @@ const ProductListScreen = ({ route, navigation }) => {
         <View style={styles.errorContainer}>
           <Icon name="alert-circle" size={48} color={colors.error} />
           <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.retryButton}
             onPress={() => fetchProducts(true)}
           >
@@ -159,11 +159,12 @@ const ProductListScreen = ({ route, navigation }) => {
           data={products}
           numColumns={2}
           contentContainerStyle={styles.list}
+          columnWrapperStyle={styles.columnWrapper}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <ProductCard
               product={item}
-              onPress={(product) => navigation.navigate('ProductDetail', { product })}
+              onPress={(product) => navigation.navigate('ProductDetail', {product})}
               onFavoritePress={(id) => console.log('Favorite:', id)}
             />
           )}
@@ -181,14 +182,14 @@ const ProductListScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: colors.white 
+  container: {
+    flex: 1,
+    backgroundColor: colors.white
   },
-  header: { 
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16, 
+    paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
@@ -203,12 +204,12 @@ const styles = StyleSheet.create({
   headerContent: {
     flex: 1,
   },
-  title: { 
-    ...typography.h3 
+  title: {
+    ...typography.h3
   },
-  count: { 
-    ...typography.bodySmall, 
-    color: colors.textSecondary, 
+  count: {
+    ...typography.bodySmall,
+    color: colors.textSecondary,
     marginTop: 2,
   },
   filterButton: {
@@ -218,30 +219,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 8,
   },
-  list: { 
-    paddingHorizontal: 16, 
+  list: {
+    paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 24,
+  },
+  columnWrapper: {
+    justifyContent: 'space-between',
   },
   footer: {
     paddingVertical: 20,
     alignItems: 'center',
   },
-  empty: { 
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
+  empty: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 32,
     paddingVertical: 60,
   },
-  emptyTitle: { 
-    ...typography.h4, 
+  emptyTitle: {
+    ...typography.h4,
     marginTop: 16,
     marginBottom: 8,
   },
-  emptySubtitle: { 
-    ...typography.bodyMedium, 
-    color: colors.textSecondary, 
+  emptySubtitle: {
+    ...typography.bodyMedium,
+    color: colors.textSecondary,
     textAlign: 'center',
     marginBottom: 24,
   },

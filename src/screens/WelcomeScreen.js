@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
-import { colors } from '../styles/colors';
-import { typography } from '../styles/typography';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {LinearGradient} from 'expo-linear-gradient';
+import {colors} from '../styles/colors';
+import {typography} from '../styles/typography';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const WelcomeScreen = ({ navigation }) => {
+const WelcomeScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <LinearGradient
@@ -24,17 +24,17 @@ const WelcomeScreen = ({ navigation }) => {
         {/* Logo/Brand Section */}
         <View style={styles.logoContainer}>
           <View style={styles.logoCircle}>
-            <Text style={styles.logoText}>FD</Text>
+            <Text style={styles.logoText}>CU</Text>
           </View>
-          <Text style={styles.brandName}>FurniDecor</Text>
-          <Text style={styles.tagline}>Your Dream Home Awaits</Text>
+          <Text style={styles.brandName}>Cozynest</Text>
+          <Text style={styles.tagline}>Urni Decor</Text>
         </View>
 
         {/* Hero Image */}
         <View style={styles.imageContainer}>
           <Image
-            source={{ 
-              uri: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800' 
+            source={{
+              uri: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800'
             }}
             style={styles.heroImage}
             resizeMode="cover"
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
     shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
     shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,

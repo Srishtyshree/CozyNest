@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -8,15 +8,15 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import { colors } from '../styles/colors';
-import { typography } from '../styles/typography';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
+import {colors} from '../styles/colors';
+import {typography} from '../styles/typography';
 import ProductCard from '../components/ProductCard';
 import FurnitureAPI from '../services/api';
-import { transformApiProduct, debounce } from '../utils/helpers';
+import {transformApiProduct, debounce} from '../utils/helpers';
 
-const SearchScreen = ({ navigation }) => {
+const SearchScreen = ({navigation}) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -95,7 +95,7 @@ const SearchScreen = ({ navigation }) => {
         <Text style={styles.emptyText}>
           Find chairs, tables, sofas, and more
         </Text>
-        
+
         {/* Quick Search Suggestions */}
         <View style={styles.suggestionsContainer}>
           <Text style={styles.suggestionsTitle}>Popular Searches</Text>
@@ -118,13 +118,13 @@ const SearchScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Search Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
           <Icon name="arrow-left" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
-        
+
         <View style={styles.searchBar}>
           <Icon name="magnify" size={22} color={colors.textSecondary} />
           <TextInput
@@ -158,10 +158,11 @@ const SearchScreen = ({ navigation }) => {
         data={results}
         numColumns={2}
         contentContainerStyle={styles.results}
-        renderItem={({ item }) => (
+        columnWrapperStyle={styles.columnWrapper}
+        renderItem={({item}) => (
           <ProductCard
             product={item}
-            onPress={(product) => navigation.navigate('ProductDetail', { product })}
+            onPress={(product) => navigation.navigate('ProductDetail', {product})}
             onFavoritePress={(id) => console.log('Favorite:', id)}
           />
         )}
@@ -174,9 +175,9 @@ const SearchScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: colors.white 
+  container: {
+    flex: 1,
+    backgroundColor: colors.white
   },
   header: {
     flexDirection: 'row',
@@ -203,23 +204,27 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     gap: 8,
   },
-  input: { 
-    flex: 1, 
+  input: {
+    flex: 1,
     ...typography.bodyMedium,
     color: colors.textPrimary,
   },
   resultsHeader: {
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingTop: 16,
+    paddingBottom: 8,
   },
   resultsCount: {
     ...typography.bodyMedium,
     color: colors.textSecondary,
   },
-  results: { 
-    paddingHorizontal: 16, 
-    paddingTop: 8,
+  results: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
     paddingBottom: 24,
+  },
+  columnWrapper: {
+    justifyContent: 'space-between',
   },
   centerContainer: {
     flex: 1,

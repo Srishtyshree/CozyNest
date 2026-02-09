@@ -57,7 +57,7 @@ const ProductDetailScreen = ({route, navigation}) => {
     addToCart(product, quantity);
     Alert.alert('Success', 'Added to cart successfully', [
       {text: 'Continue Shopping', style: 'cancel'},
-      {text: 'Go to Cart', onPress: () => navigation.navigate('Cart')},
+      {text: 'Go to Cart', onPress: () => navigation.navigate('MainTabs', {screen: 'Cart'})},
     ]);
   };
 
@@ -127,6 +127,7 @@ const ProductDetailScreen = ({route, navigation}) => {
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
+        style={{flex: 1}}
       >
         {/* Product Image */}
         <View style={styles.imageContainer}>
