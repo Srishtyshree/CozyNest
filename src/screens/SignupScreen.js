@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -28,6 +28,26 @@ const SignupScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [agreeToTerms, setAgreeToTerms] = useState(false);
+
+  const handleNameChange = useCallback((text) => {
+    setName(text);
+    if (errors.name) setErrors(prev => ({...prev, name: ''}));
+  }, [errors.name]);
+
+  const handleEmailChange = useCallback((text) => {
+    setEmail(text);
+    if (errors.email) setErrors(prev => ({...prev, email: ''}));
+  }, [errors.email]);
+
+  const handlePasswordChange = useCallback((text) => {
+    setPassword(text);
+    if (errors.password) setErrors(prev => ({...prev, password: ''}));
+  }, [errors.password]);
+
+  const handleConfirmPasswordChange = useCallback((text) => {
+    setConfirmPassword(text);
+    if (errors.confirmPassword) setErrors(prev => ({...prev, confirmPassword: ''}));
+  }, [errors.confirmPassword]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -126,10 +146,7 @@ const SignupScreen = ({navigation}) => {
                   placeholder="Enter your full name"
                   placeholderTextColor={colors.textLight}
                   value={name}
-                  onChangeText={(text) => {
-                    setName(text);
-                    setErrors(prev => ({...prev, name: ''}));
-                  }}
+                  onChangeText={handleNameChange}
                   autoCapitalize="words"
                 />
               </View>
@@ -151,10 +168,7 @@ const SignupScreen = ({navigation}) => {
                   placeholder="Enter your email"
                   placeholderTextColor={colors.textLight}
                   value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                    setErrors(prev => ({...prev, email: ''}));
-                  }}
+                  onChangeText={handleEmailChange}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -178,10 +192,7 @@ const SignupScreen = ({navigation}) => {
                   placeholder="Create a password"
                   placeholderTextColor={colors.textLight}
                   value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                    setErrors(prev => ({...prev, password: ''}));
-                  }}
+                  onChangeText={handlePasswordChange}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
                 />
@@ -214,10 +225,7 @@ const SignupScreen = ({navigation}) => {
                   placeholder="Re-enter your password"
                   placeholderTextColor={colors.textLight}
                   value={confirmPassword}
-                  onChangeText={(text) => {
-                    setConfirmPassword(text);
-                    setErrors(prev => ({...prev, confirmPassword: ''}));
-                  }}
+                  onChangeText={handleConfirmPasswordChange}
                   secureTextEntry={!showConfirmPassword}
                   autoCapitalize="none"
                 />

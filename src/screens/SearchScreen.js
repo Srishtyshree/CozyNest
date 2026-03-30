@@ -114,6 +114,22 @@ const SearchScreen = ({navigation}) => {
     );
   };
 
+  const handleProductPress = useCallback((product) => {
+    navigation.navigate('ProductDetail', {product});
+  }, [navigation]);
+
+  const handleFavoritePress = useCallback((id) => {
+    console.log('Favorite:', id);
+  }, []);
+
+  const renderProductItem = useCallback(({item}) => (
+    <ProductCard
+      product={item}
+      onPress={handleProductPress}
+      onFavoritePress={handleFavoritePress}
+    />
+  ), [handleProductPress, handleFavoritePress]);
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Search Header */}
@@ -159,14 +175,12 @@ const SearchScreen = ({navigation}) => {
         numColumns={2}
         contentContainerStyle={styles.results}
         columnWrapperStyle={styles.columnWrapper}
-        renderItem={({item}) => (
-          <ProductCard
-            product={item}
-            onPress={(product) => navigation.navigate('ProductDetail', {product})}
-            onFavoritePress={(id) => console.log('Favorite:', id)}
-          />
-        )}
+        renderItem={renderProductItem}
         keyExtractor={(item) => item.id}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={5}
+        removeClippedSubviews={true}
         ListEmptyComponent={renderEmpty}
         showsVerticalScrollIndicator={false}
       />

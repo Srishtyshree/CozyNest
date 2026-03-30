@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -60,21 +60,21 @@ const ExploreScreen = ({navigation}) => {
     {key: 'price', label: 'By Price'},
   ];
 
-  const handleCategoryPress = (category) => {
+  const handleCategoryPress = useCallback((category) => {
     navigation.navigate('ProductList', {
       category: category,
       apiCategory: category.apiCategory,
       filterParams: category.filterParams || {},
     });
-  };
+  }, [navigation]);
 
-  const renderCategoryItem = ({item}) => (
+  const renderCategoryItem = useCallback(({item}) => (
     <CategoryCard
       category={item}
-      onPress={() => handleCategoryPress(item)}
+      onPress={handleCategoryPress}
       style={{width: width * 0.7}}
     />
-  );
+  ), [handleCategoryPress]);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>

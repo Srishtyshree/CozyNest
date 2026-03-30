@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -24,6 +24,16 @@ const LoginScreen = ({navigation}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const handleEmailChange = useCallback((text) => {
+    setEmail(text);
+    if (errors.email) setErrors(prev => ({...prev, email: ''}));
+  }, [errors.email]);
+
+  const handlePasswordChange = useCallback((text) => {
+    setPassword(text);
+    if (errors.password) setErrors(prev => ({...prev, password: ''}));
+  }, [errors.password]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -112,10 +122,7 @@ const LoginScreen = ({navigation}) => {
                   placeholder="Enter your email"
                   placeholderTextColor={colors.textLight}
                   value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                    setErrors(prev => ({...prev, email: ''}));
-                  }}
+                  onChangeText={handleEmailChange}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -139,10 +146,7 @@ const LoginScreen = ({navigation}) => {
                   placeholder="Enter your password"
                   placeholderTextColor={colors.textLight}
                   value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                    setErrors(prev => ({...prev, password: ''}));
-                  }}
+                  onChangeText={handlePasswordChange}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
                 />

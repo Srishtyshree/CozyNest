@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -83,12 +83,12 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  const handleCategoryPress = (category) => {
+  const handleCategoryPress = useCallback((category) => {
     navigation.navigate('ProductList', {
       category: category,
       apiCategory: category.apiCategory,
     });
-  };
+  }, [navigation]);
 
   const handleFilterPress = async (filterType) => {
     try {
@@ -125,13 +125,21 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  const renderCategoryItem = ({item}) => (
+  const renderCategoryItem = useCallback(({item}) => (
     <CategoryCard
       category={item}
-      onPress={() => handleCategoryPress(item)}
+      onPress={handleCategoryPress}
       style={{width: width * 0.7}}
     />
-  );
+  ), [handleCategoryPress]);
+
+  const handleProductPress = useCallback((product) => {
+    navigation.navigate('ProductDetail', {product});
+  }, [navigation]);
+
+  const handleFavoritePress = useCallback((id) => {
+    console.log('Favorite:', id);
+  }, []);
 
   return (
     <SafeAreaView style={globalStyles.container} edges={['top']}>
@@ -234,8 +242,8 @@ const HomeScreen = ({navigation}) => {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  onPress={(product) => navigation.navigate('ProductDetail', {product})}
-                  onFavoritePress={(id) => console.log('Favorite:', id)}
+                  onPress={handleProductPress}
+                  onFavoritePress={handleFavoritePress}
                 />
               ))}
             </View>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -120,6 +120,22 @@ const ProductListScreen = ({route, navigation}) => {
     );
   };
 
+  const handleProductPress = useCallback((product) => {
+    navigation.navigate('ProductDetail', {product});
+  }, [navigation]);
+
+  const handleFavoritePress = useCallback((id) => {
+    console.log('Favorite:', id);
+  }, []);
+
+  const renderProductItem = useCallback(({item}) => (
+    <ProductCard
+      product={item}
+      onPress={handleProductPress}
+      onFavoritePress={handleFavoritePress}
+    />
+  ), [handleProductPress, handleFavoritePress]);
+
   const screenTitle = title || category?.name || 'Products';
 
   return (
@@ -161,13 +177,10 @@ const ProductListScreen = ({route, navigation}) => {
           contentContainerStyle={styles.list}
           columnWrapperStyle={styles.columnWrapper}
           keyExtractor={(item) => item.id}
-          renderItem={({item}) => (
-            <ProductCard
-              product={item}
-              onPress={(product) => navigation.navigate('ProductDetail', {product})}
-              onFavoritePress={(id) => console.log('Favorite:', id)}
-            />
-          )}
+          renderItem={renderProductItem}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={5}
           ListEmptyComponent={renderEmpty}
           ListFooterComponent={renderFooter}
           onEndReached={handleLoadMore}
@@ -175,6 +188,7 @@ const ProductListScreen = ({route, navigation}) => {
           refreshing={refreshing}
           onRefresh={handleRefresh}
           showsVerticalScrollIndicator={false}
+          removeClippedSubviews={true}
         />
       )}
     </SafeAreaView>

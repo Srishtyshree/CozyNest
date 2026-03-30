@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
 import { colors } from '../styles/colors';
 import { typography } from '../styles/typography';
 
-const CategoryCard = ({ category, onPress, style }) => {
+const CategoryCard = memo(({ category, onPress, style }) => {
   return (
     <TouchableOpacity
       style={[styles.container, style]}
@@ -30,7 +30,7 @@ const CategoryCard = ({ category, onPress, style }) => {
       </View>
     </TouchableOpacity>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

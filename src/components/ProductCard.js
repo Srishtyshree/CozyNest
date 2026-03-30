@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, memo} from 'react';
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import {typography} from '../styles/typography';
 const {width} = Dimensions.get('window');
 const CARD_WIDTH = (width - 56) / 2; // Further increased gap to 24px (32px side padding + 24px center gap)
 
-const ProductCard = ({product, onPress, onFavoritePress}) => {
+const ProductCard = memo(({product, onPress, onFavoritePress}) => {
   const [isFavorite, setIsFavorite] = useState(product.isFavorite || false);
 
   const handleFavoritePress = () => {
@@ -87,7 +87,7 @@ const ProductCard = ({product, onPress, onFavoritePress}) => {
       </View>
     </TouchableOpacity>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

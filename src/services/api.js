@@ -1,4 +1,6 @@
 // src/services/api.js
+import { getMockProducts, getMockProductBySku } from './mockData';
+
 const BASE_URL = 'https://furniture-api.fly.dev/v1';
 
 class FurnitureAPI {
@@ -24,14 +26,15 @@ class FurnitureAPI {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        console.warn(`API is down (${response.status}). Using local mock data fallback.`);
+        return getMockProducts(params);
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching products:', error);
-      throw error;
+      console.warn('Network or fetch error. Using local mock data fallback.', error);
+      return getMockProducts(params);
     }
   }
 
@@ -50,14 +53,15 @@ class FurnitureAPI {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        console.warn(`API is down (${response.status}). Using local mock data fallback.`);
+        return getMockProductBySku(sku);
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching product:', error);
-      throw error;
+      console.warn('Network or fetch error. Using local mock data fallback.', error);
+      return getMockProductBySku(sku);
     }
   }
 
